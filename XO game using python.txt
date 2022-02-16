@@ -1,0 +1,128 @@
+https://www.linkedin.com/posts/pavan-kothapalli-5313a4198_programming-tictactoe-gaming-activity-6866924612668801024-Nj6g
+.............................................................
+#create Gameboard class
+class Gameboard():
+#inside the gameboard class we create instance of the game board as following:
+    def __init__(self):
+        self.game_board = {1:' ', 2:' ', 3:' ', 4:' ', 5:' ', 6:' ', 7:' ', 8:' ', 9:' '}
+#then we create items as items setter function:
+    def set_items(self,user,position,game_board):
+        game_board[position] = user
+        return game_board
+#create a decorator(@property) for the gameboard function to add seperate self instance for game_board
+    @property
+    def gameBoard(self):
+        return self.game_board
+#add another function called clearboard:
+    def clearboard(self):
+        self.game_board = {1:' ', 2:' ',3:' ',4:' ',5:' ',6:' ',7:' ',8:' ',9:' '}
+#add another function called is_take_place
+    def is_place_taken(self,game_board,index):
+         if game_board[index] != ' ' :
+            return True
+#add another function called is_board_full:
+    def is_board_full(self,game_board):
+        for index in range(1,10):
+            if game_board[index] ==' ':
+                return False
+        return True
+#add another function called is_game_won:
+    def is_game_won(self,game_board):
+        win_conds = ((1,2,3),(4,5,6),(7,8,9),(1,4,7),(2,5,8),(3,6,9),(1,5,9),(3,5,7))
+        for win_cond in win_conds:
+            if game_board[win_cond[0]] == game_board[win_cond[1]] and game_board[win_cond[1]] == game_board[win_cond[2]] and game_board[win_cond[0]]!= ' ':
+                return True
+
+#add another function to print Game board: contain the game flow in the board:
+    def printBoard(self,game_board):
+        index = 0
+        for row in range(1,4):
+            for column in range(1,4):
+                index += 1
+                if column != 3:
+                    print(game_board[index],end='')
+                    print('|',end='')
+                else:
+                    print(game_board[index])
+                    
+.....................................................................................................................................................................
+#create a second class called game:to control the game start and game end:and ask for player names:
+#so game class contain four function that control the game steps.
+
+class Game():
+
+#1-game start
+   def game_start(self):
+        
+        self.controlBoard = Gameboard()
+        self.game_board = self.controlBoard.gameBoard
+        self.playerOne = 'O'
+        self.playerTwo = 'X'
+        print('welcome to X-O Game')
+        print("Please enter player one's name")
+        self.player_one = input(' : ')
+        print("Please enter player Two's name")
+        self.player_two = input(' : ')
+        print('Here is your game board,each place is represented by 1-9,starting from left column each time and moving along the row')
+        self.controlBoard.printBoard(self.game_board)
+        self.turn = 1
+#2-game end and play again
+   def game_end(self):
+        #check if a player wants to end the game 
+        if self.game_running == False:
+            replay = input('press 0 to quit or 1 to play again: ')
+            try:
+                if int(replay):
+                    self.game_running = True
+                    self.game_start()
+            except:
+                print("A number must be entered:")
+                self.game_end()
+                
+#3-game turn
+   def takeTurn(self,user,item):
+        print(user +'choose a place, 1-9')
+        try:
+            position = int(input(':'))
+            if position > 9 or position < 1:
+                raise Exception
+                
+        except:
+            print('pick a number between 1-9')
+            return self.takeTurn(user,item)
+        
+        if self.controlBoard.is_place_taken(self.game_board,position):
+            print("That place is taken")
+            self.takeTurn(user,item)
+        else:
+            self.controlBoard.set_items(item,position,self.game_board)
+            self.controlBoard.printBoard(self.game_board)
+            if self.controlBoard.is_game_won(self.game_board):
+                print(user + "wins.")
+                self.game_running = False
+
+#4-game manager      
+   def main(self,):
+        self.game_running = True
+        self.game_start()
+        while self.game_running:
+            if self.turn%2 !=0:
+                self.takeTurn(self.player_one,'O')
+            else:
+                self.takeTurn(self.player_two,'x')
+                
+                
+            if self.controlBoard.is_board_full(self.game_board):
+                print("its a draw!!")
+                self.game_running = False
+            self.turn += 1
+            
+            if not self.game_running:
+                self.game_end()
+    
+#create the game lancher of the game:
+
+if __name__ == '__main__':
+    Game().main()
+    5
+    
