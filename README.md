@@ -1,2 +1,2 @@
-# xo-python
+# XO-Python
 xo game using python
